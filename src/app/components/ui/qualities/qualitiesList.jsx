@@ -5,9 +5,14 @@ import Quality from "./quality";
 const QualitiesList = ({ qualities }) => {
     return (
         <>
-            {qualities.map((qual) => (
-                <Quality key={qual._id} {...qual} />
-            ))}
+            <h5 className="card-title">
+                <span>Qualities</span>
+            </h5>
+            <p className="card-title">
+                {qualities.map((qual) => (
+                    <Quality key={qual._id} {...qual} />
+                ))}
+            </p>
         </>
     );
 };

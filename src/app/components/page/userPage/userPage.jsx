@@ -3,31 +3,59 @@ import PropTypes from "prop-types";
 import api from "../../../api";
 import Qualities from "../../ui/qualities";
 import { useHistory } from "react-router-dom";
+import UserCard from "./userCard";
+import MeetingsCard from "./meetingsCard";
+import Newcommets from "./newCommets";
+import AllComment from "./allComment";
 
 const UserPage = ({ userId }) => {
     const history = useHistory();
     const [user, setUser] = useState();
+
     useEffect(() => {
         api.users.getById(userId).then((data) => setUser(data));
     }, []);
     const handleClick = () => {
         history.push("/users");
     };
+    const handleChangeUser = () => {
+        history.push(`/users/${userId}/edit`);
+    };
     if (user) {
         return (
-            <div className="d-flex justyfi-content-center">
-                <div className="d-flex flex-column flex-shrink-0 p-3">
-                    <h1> {user.name}</h1>
-                    <h2>Профессия: {user.profession.name}</h2>
-                    <Qualities qualities={user.qualities} />
-                    <p>completedMeetings: {user.completedMeetings}</p>
-                    <h2>Rate: {user.rate}</h2>
-                    <button onClick={handleClick}> Все Пользователи</button>
-                    <button
-                        onClick={() => history.push(`/users/${userId}/edit`)}
-                    >
-                        Редактировать
-                    </button>
+            <div className="container">
+                <div className="row gutters-sm">
+                    <div className="col-md-4 mb-3">
+                        <UserCard
+                            prof={user.profession.name}
+                            name={user.name}
+                            handleClick={handleChangeUser}
+                            rate={user.rate}
+                        />
+                        <div className="card mb-3">
+                            <div className="card-body d-flex flex-column justify-content-center text-center">
+                                <Qualities qualities={user.qualities} />
+                            </div>
+                        </div>
+                        <MeetingsCard meets={user.completedMeetings} />
+
+                        <button
+                            className="btn btn-primary"
+                            onClick={handleClick}
+                        >
+                            Все Пользователи
+                        </button>
+                    </div>
+                    <div className="col-md-8 p-2">
+                        <div className="card mb-3">
+                            <Newcommets />
+                            <div className="card-body ">
+                                <h2>Comments</h2>
+                                <hr />
+                                <AllComment />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
