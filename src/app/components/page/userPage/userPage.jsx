@@ -11,12 +11,29 @@ import AllComment from "./allComment";
 const UserPage = ({ userId }) => {
     const history = useHistory();
     const [user, setUser] = useState();
+    const [comments, setComments] = useState();
+
+    useEffect(() => {
+        api.comments.fetchCommentsForUser(userId).then((data) => {
+            setComments(data);
+        });
+    }, [localStorage.getItem("comments")]);
 
     useEffect(() => {
         api.users.getById(userId).then((data) => setUser(data));
     }, []);
     const handleClick = () => {
         history.push("/users");
+    };
+    const handleUpdate = (comment) => {
+        setComments(comment);
+    };
+
+    const handleDelteComment = (id) => {
+        api.comments.remove(id);
+        api.comments.fetchCommentsForUser(id).then((data) => {
+            setComments(data);
+        });
     };
     const handleChangeUser = () => {
         history.push(`/users/${userId}/edit`);
@@ -48,11 +65,15 @@ const UserPage = ({ userId }) => {
                     </div>
                     <div className="col-md-8 p-2">
                         <div className="card mb-3">
-                            <Newcommets />
+                            <Newcommets handleUpdate={handleUpdate} />
                             <div className="card-body ">
                                 <h2>Comments</h2>
                                 <hr />
-                                <AllComment />
+                                <AllComment
+                                    userId={userId}
+                                    comments={comments}
+                                    handleDelteComment={handleDelteComment}
+                                />
                             </div>
                         </div>
                     </div>

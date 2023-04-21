@@ -1,25 +1,7 @@
-import React, { useEffect, useState } from "react";
-import api from "../../../api";
-const AllComment = () => {
-    const [comments, setComments] = useState();
-    useEffect(() => {
-        if (localStorage.getItem("comments")) {
-            const comments = localStorage.getItem("comments");
-            const result = JSON.parse(comments);
-            setComments(result);
-        }
-    }, []);
-    const getNameUser = (id) => {
-        let name = "";
-        api.users.getById(id).then((user) => {
-            console.log(user.name);
-            name = user.name;
-        });
-        console.log(name);
-        return name;
-    };
+import React from "react";
+import PropTypes from "prop-types";
 
-    console.log(getNameUser("67rdca3eeb7f6fgeed471815"));
+const AllComment = ({ comments, handleDelteComment }) => {
     return (
         <>
             {comments &&
@@ -44,16 +26,20 @@ const AllComment = () => {
                                             <div className="d-flex justify-content-between align-items-center">
                                                 <p className="mb-1 ">
                                                     <span>
-                                                        {undefined &&
-                                                            getNameUser(
-                                                                comment.userId
-                                                            )}
+                                                        {comment.name + "-"}
                                                     </span>
                                                     <span className="small">
-                                                        Published Time
+                                                        {comment.created_at}
                                                     </span>
                                                 </p>
-                                                <button className="btn btn-sm text-primary d-flex align-items-center">
+                                                <button
+                                                    className="btn btn-sm text-primary d-flex align-items-center"
+                                                    onClick={() =>
+                                                        handleDelteComment(
+                                                            comment._id
+                                                        )
+                                                    }
+                                                >
                                                     <i className="bi bi-x-lg"></i>
                                                 </button>
                                             </div>
@@ -69,6 +55,11 @@ const AllComment = () => {
                 ))}
         </>
     );
+};
+
+AllComment.propTypes = {
+    comments: PropTypes.object,
+    handleDelteComment: PropTypes.func
 };
 
 export default AllComment;

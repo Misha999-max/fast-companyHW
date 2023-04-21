@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../api";
+import PropTypes from "prop-types";
 
-const Newcommets = () => {
+const Newcommets = ({ handleUpdate }) => {
     const [names, setNames] = useState();
-    const [user, setUser] = useState({
-        name: "",
-        userId: ""
-    });
+    const [user, setUser] = useState({});
     const [textArea, setTextArea] = useState("");
 
     useEffect(() => {
         api.users.fetchAll().then((data) => setNames(data));
-    }, []);
+    }, [localStorage.getItem("comments")]);
 
     const handleChange = ({ target }) => {
-        setUser({ userId: target.value, name: target.textContent });
+        const userArr = target.value.split(",");
+        setUser({ userId: userArr[0], name: userArr[1] });
     };
     const handleChangeArea = (value) => {
         setTextArea(value);
@@ -28,6 +27,10 @@ const Newcommets = () => {
             pageId: user.userId,
             content: textArea
         });
+        api.comments.fetchCommentsForUser(user.userId).then((data) => {
+            handleUpdate(data);
+        });
+
         setTextArea("");
     };
 
@@ -47,8 +50,7 @@ const Newcommets = () => {
                         names.map((elem) => {
                             return (
                                 <option
-                                    defaultValue={elem.name}
-                                    value={elem._id}
+                                    value={[elem._id, elem.name]}
                                     key={elem._id}
                                 >
                                     {elem.name}
@@ -83,6 +85,11 @@ const Newcommets = () => {
             </form>
         </div>
     );
+};
+
+Newcommets.propTypes = {
+    userId: PropTypes.string,
+    handleUpdate: PropTypes.func
 };
 
 export default Newcommets;

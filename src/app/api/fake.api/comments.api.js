@@ -1,6 +1,7 @@
 const comments = [
     {
         _id: "67rdca3eeb7f6fg",
+        name: "Джоун Дориан",
         userId: "67rdca3eeb7f6fgeed471815",
         pageId: "67rdca3eeb7f6fgeed471815",
         content: "Lorem ipsum dolor",
@@ -8,6 +9,7 @@ const comments = [
     },
     {
         _id: "67rdca3eeb7f6fgdasd",
+        name: "Джоун Дориан",
         pageId: "67rdca3eeb7f6fgeed471815",
         userId: "67rdca3eeb7f6fgeed471815",
         content: "Lorem ipsum dolor and etc",
@@ -15,6 +17,7 @@ const comments = [
     },
     {
         _id: "67rdca3eeb7f6fgdaasd",
+        name: "Джоун Дориан",
         pageId: "67rdca3eeb7f6fgeed471815",
         userId: "67rdca3eeb7f6fgeed471815",
         content: "Lorem ipsum dolor and etc",
