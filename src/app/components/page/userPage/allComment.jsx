@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { displayDate } from "../../../utils/converDate";
 
 const AllComment = ({ comments, handleDelteComment }) => {
     return (
@@ -29,7 +30,9 @@ const AllComment = ({ comments, handleDelteComment }) => {
                                                         {comment.name + "-"}
                                                     </span>
                                                     <span className="small">
-                                                        {comment.created_at}
+                                                        {displayDate(
+                                                            comment.created_at
+                                                        )}
                                                     </span>
                                                 </p>
                                                 <button
