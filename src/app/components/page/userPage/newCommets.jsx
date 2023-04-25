@@ -1,95 +1,89 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../api";
 import PropTypes from "prop-types";
+import SelectField from "../../common/form/selectField";
+import TextAreaField from "../../common/form/textAreaFild";
 
-const Newcommets = ({ handleUpdate }) => {
-    const [names, setNames] = useState();
-    const [user, setUser] = useState({});
-    const [textArea, setTextArea] = useState("");
+const initialData = { userId: "", content: "" };
+
+const Newcommets = ({ onSubmit }) => {
+    const [users, setUsers] = useState();
+    const [data, setData] = useState(initialData);
+
+    const transformNames = (data) => {
+        return data.map((item) => ({
+            ...item,
+            value: item._id,
+            label: item.name
+        }));
+    };
+
+    const clearFormText = () => {
+        setData(initialData);
+    };
 
     useEffect(() => {
-        api.users.fetchAll().then((data) => setNames(data));
-    }, [localStorage.getItem("comments")]);
+        api.users.fetchAll().then((data) => {
+            console.log(data);
+            setUsers(transformNames(data));
+        });
+    }, []);
 
-    const handleChange = ({ target }) => {
-        const userArr = target.value.split(",");
-        setUser({ userId: userArr[0], name: userArr[1] });
-    };
-    const handleChangeArea = (value) => {
-        setTextArea(value);
+    const handleChange = (target) => {
+        setData((prevState) => ({
+            ...prevState,
+            [target.name]: target.value
+        }));
     };
 
     const handleAddComment = (e) => {
         e.preventDefault();
-        api.comments.add({
-            userId: user.userId,
-            name: user.name,
-            pageId: user.userId,
-            content: textArea
-        });
-        api.comments.fetchCommentsForUser(user.userId).then((data) => {
-            handleUpdate(data);
-        });
-
-        setTextArea("");
+        onSubmit(data);
+        clearFormText();
     };
 
     return (
-        <div className="card mb-2 p-2">
-            <div className="card-body ">New comment</div>
-            <form>
-                <select
-                    className="form-select mt-6"
-                    name="userId"
-                    onChange={handleChange}
-                >
-                    <option value="ADD USER" selected>
-                        ADD USER
-                    </option>
-                    {names &&
-                        names.map((elem) => {
-                            return (
-                                <option
-                                    value={[elem._id, elem.name]}
-                                    key={elem._id}
-                                >
-                                    {elem.name}
-                                </option>
-                            );
-                        })}
-                </select>
+        <>
+            {users && (
+                <div className="card mb-2 p-2">
+                    <div className="card-body ">New comment</div>
+                    <form onSubmit={handleAddComment}>
+                        <SelectField
+                            defaultOption="Choose..."
+                            options={users}
+                            name="userId"
+                            onChange={handleChange}
+                            value={data.userId}
+                        />
 
-                <div className="mb-3">
-                    <label
-                        htmlFor="exampleFormControlTextarea1"
-                        className="form-label mt-2"
-                    >
-                        Напишите комментарий:
-                    </label>
-                    <textarea
-                        className="form-control"
-                        id="exampleFormControlTextarea1"
-                        rows="3"
-                        name="content"
-                        onChange={(e) => handleChangeArea(e.target.value)}
-                        value={textArea}
-                    ></textarea>
+                        <div className="mb-3">
+                            <label
+                                htmlFor="exampleFormControlTextarea1"
+                                className="form-label mt-2"
+                            >
+                                Напишите комментарий:
+                            </label>
+                            <TextAreaField
+                                onChange={handleChange}
+                                value={data.content}
+                                name="content"
+                                label="Введите сообщение"
+                            />
 
-                    <button
-                        className="btn btn-primary mt-3"
-                        onClick={handleAddComment}
-                    >
-                        Отправить комментарий
-                    </button>
+                            <button className="btn btn-primary mt-3">
+                                Отправить комментарий
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </form>
-        </div>
+            )}
+        </>
     );
 };
 
 Newcommets.propTypes = {
     userId: PropTypes.string,
-    handleUpdate: PropTypes.func
+    onSubmit: PropTypes.func
 };
 
 export default Newcommets;

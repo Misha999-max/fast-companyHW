@@ -48,7 +48,7 @@ UserCard.propTypes = {
     prof: PropTypes.string,
     name: PropTypes.string,
     handleClick: PropTypes.func,
-    rate: PropTypes.string
+    rate: PropTypes.number
 };
 
 export default UserCard;

@@ -24,6 +24,9 @@
         "eject": "react-scripts eject",
         "format": "npx prettier --write ."
     },
+    "overrides": {
+        "react-error-overlay": "6.0.9"
+    },
     "eslintConfig": {
         "extends": [
             "react-app",
