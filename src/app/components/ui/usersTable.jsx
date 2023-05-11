@@ -5,6 +5,8 @@ import BookMark from "../common/bookmark";
 import Qualities from "./qualities";
 import Table from "../common/table";
 import { Link } from "react-router-dom";
+import Profession from "./profession";
+import { useQualites } from "../../hooks/useQualities";
 
 const UserTable = ({
     users,
@@ -14,6 +16,8 @@ const UserTable = ({
     onDelete,
     ...rest
 }) => {
+    const { qualities } = useQualites();
+    console.log(qualities);
     const columns = {
         name: {
             path: "name",
@@ -24,9 +28,17 @@ const UserTable = ({
         },
         qualities: {
             name: "Качества",
-            component: (user) => <Qualities qualities={user.qualities} />
+            component: (user) => (
+                <Qualities
+                    qualities={user.qualities}
+                    qualitiesArr={qualities}
+                />
+            )
         },
-        professions: { path: "profession.name", name: "Профессия" },
+        professions: {
+            name: "Профессия",
+            component: (user) => <Profession id={user.profession} />
+        },
         completedMeetings: {
             path: "completedMeetings",
             name: "Встретился, раз"

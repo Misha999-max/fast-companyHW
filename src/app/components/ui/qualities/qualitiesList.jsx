@@ -2,23 +2,24 @@ import React from "react";
 import PropTypes from "prop-types";
 import Quality from "./quality";
 
-const QualitiesList = ({ qualities }) => {
+const QualitiesList = ({ qualities, qualitiesArr }) => {
+    console.log(qualities);
+    const arrQualities = qualities.map((qua) =>
+        qualitiesArr.filter((item) => item._id === qua)
+    );
+    console.log(qualitiesArr);
     return (
         <>
-            <h5 className="card-title">
-                <span>Qualities</span>
-            </h5>
-            <p className="card-title">
-                {qualities.map((qual) => (
-                    <Quality key={qual._id} {...qual} />
-                ))}
-            </p>
+            {arrQualities.map((qual) => (
+                <Quality key={qual._id} {...qual} />
+            ))}
         </>
     );
 };
 
 QualitiesList.propTypes = {
-    qualities: PropTypes.array
+    qualities: PropTypes.array,
+    qualitiesArr: PropTypes.array
 };
 
 export default QualitiesList;
