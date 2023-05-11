@@ -31,7 +31,7 @@ export const QualitiesProvider = ({ children }) => {
         setError(message);
         setQualities(prevState.current);
     }
-    console.log(qualities);
+
     useEffect(() => {
         if (error !== null) {
             toast.error(error);

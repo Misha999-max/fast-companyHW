@@ -3,14 +3,16 @@ import PropTypes from "prop-types";
 import Quality from "./quality";
 
 const QualitiesList = ({ qualities, qualitiesArr }) => {
-    console.log(qualities);
-    const arrQualities = qualities.map((qua) =>
-        qualitiesArr.filter((item) => item._id === qua)
+    const arr = [];
+    qualities.forEach((elem) =>
+        qualitiesArr.forEach((qual) => {
+            if (elem === qual._id) arr.push(qual);
+        })
     );
-    console.log(qualitiesArr);
+    console.log(arr);
     return (
         <>
-            {arrQualities.map((qual) => (
+            {arr.map((qual) => (
                 <Quality key={qual._id} {...qual} />
             ))}
         </>

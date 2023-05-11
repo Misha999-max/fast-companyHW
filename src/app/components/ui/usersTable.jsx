@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 import BookMark from "../common/bookmark";
 import Qualities from "./qualities";
 import Table from "../common/table";
@@ -16,8 +15,8 @@ const UserTable = ({
     onDelete,
     ...rest
 }) => {
-    const { qualities } = useQualites();
-    console.log(qualities);
+    const qualitiesArr = useQualites();
+
     const columns = {
         name: {
             path: "name",
@@ -31,7 +30,7 @@ const UserTable = ({
             component: (user) => (
                 <Qualities
                     qualities={user.qualities}
-                    qualitiesArr={qualities}
+                    qualitiesArr={qualitiesArr.qualities}
                 />
             )
         },
