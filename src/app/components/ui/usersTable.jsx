@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
+
 import BookMark from "../common/bookmark";
 import Qualities from "./qualities";
 import Table from "../common/table";
 import { Link } from "react-router-dom";
 import Profession from "./profession";
-import { useQualites } from "../../hooks/useQualities";
 
 const UserTable = ({
     users,
@@ -15,8 +15,6 @@ const UserTable = ({
     onDelete,
     ...rest
 }) => {
-    const qualitiesArr = useQualites();
-
     const columns = {
         name: {
             path: "name",
@@ -27,12 +25,7 @@ const UserTable = ({
         },
         qualities: {
             name: "Качества",
-            component: (user) => (
-                <Qualities
-                    qualities={user.qualities}
-                    qualitiesArr={qualitiesArr.qualities}
-                />
-            )
+            component: (user) => <Qualities qualities={user.qualities} />
         },
         professions: {
             name: "Профессия",

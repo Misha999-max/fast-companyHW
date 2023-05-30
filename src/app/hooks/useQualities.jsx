@@ -1,51 +1,56 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import qualityService from "../services/qualities.services";
+import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import PropTypes from "prop-types";
+import qualityService from "../services/quality.service";
 
-const QualitesContex = React.createContext();
+const QualitiesContext = React.createContext();
 
-export const useQualites = () => {
-    return useContext(QualitesContex);
+export const useQualities = () => {
+    return useContext(QualitiesContext);
 };
 
 export const QualitiesProvider = ({ children }) => {
     const [qualities, setQualities] = useState([]);
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const prevState = useRef();
+    const [isLoading, setLoading] = useState(true);
+
     useEffect(() => {
-        const getQualitiesId = async () => {
+        const getQualities = async () => {
             try {
-                const qualies = await qualityService.get();
-                setQualities(qualies.content);
+                const { content } = await qualityService.fetchAll();
+                setQualities(content);
                 setLoading(false);
             } catch (error) {
                 errorCatcher(error);
             }
         };
-        getQualitiesId();
+        getQualities();
     }, []);
+    const getQuality = (id) => {
+        return qualities.find((q) => q._id === id);
+    };
+
     function errorCatcher(error) {
         const { message } = error.response.data;
         setError(message);
-        setQualities(prevState.current);
     }
-
     useEffect(() => {
         if (error !== null) {
-            toast.error(error);
+            toast(error);
             setError(null);
         }
     }, [error]);
+
     return (
-        <QualitesContex.Provider
+        <QualitiesContext.Provider
             value={{
-                qualities
+                qualities,
+                getQuality,
+                isLoading
             }}
         >
-            {!loading ? children : <span>Loading...</span>}
-        </QualitesContex.Provider>
+            {children}
+        </QualitiesContext.Provider>
     );
 };
 
