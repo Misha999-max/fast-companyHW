@@ -17,24 +17,24 @@ const RegisterForm = () => {
         password: "",
         profession: "",
         sex: "male",
+        name: "",
         qualities: [],
         licence: false
     });
-    const { singUp } = useAuth();
+    const { signUp } = useAuth();
     const { qualities } = useQualities();
     const qualitiesList = qualities.map((q) => ({
         label: q.name,
         value: q._id
     }));
     const { professions } = useProfessions();
-    const professionList = professions.map((p) => ({
+    const professionsList = professions.map((p) => ({
         label: p.name,
         value: p._id
     }));
     const [errors, setErrors] = useState({});
 
     const handleChange = (target) => {
-        console.log(target);
         setData((prevState) => ({
             ...prevState,
             [target.name]: target.value
@@ -47,6 +47,15 @@ const RegisterForm = () => {
             },
             isEmail: {
                 message: "Email введен некорректно"
+            }
+        },
+        name: {
+            isRequired: {
+                message: "Имя обязательно для заполнения"
+            },
+            min: {
+                message: "Имя должно состоять минимум из 3 символов",
+                value: 3
             }
         },
         password: {
@@ -94,16 +103,15 @@ const RegisterForm = () => {
             ...data,
             qualities: data.qualities.map((q) => q.value)
         };
-        console.log({
-            newData
-        });
+
         try {
-            await singUp(newData);
+            await signUp(newData);
             history.push("/");
         } catch (error) {
             setErrors(error);
         }
     };
+
     return (
         <form onSubmit={handleSubmit}>
             <TextField
@@ -112,6 +120,13 @@ const RegisterForm = () => {
                 value={data.email}
                 onChange={handleChange}
                 error={errors.email}
+            />
+            <TextField
+                label="Имя"
+                name="name"
+                value={data.name}
+                onChange={handleChange}
+                error={errors.name}
             />
             <TextField
                 label="Пароль"
@@ -124,7 +139,7 @@ const RegisterForm = () => {
             <SelectField
                 label="Выбери свою профессию"
                 defaultOption="Choose..."
-                options={professionList}
+                options={professionsList}
                 name="profession"
                 onChange={handleChange}
                 value={data.profession}
