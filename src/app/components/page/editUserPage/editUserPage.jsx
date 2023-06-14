@@ -8,35 +8,23 @@ import BackHistoryButton from "../../common/backButton";
 import { useAuth } from "../../../hooks/useAuth";
 import { useProfessions } from "../../../hooks/useProfession";
 import { useQualities } from "../../../hooks/useQualities";
-// import httpService from "../../../services/http.service";
 
 const EditUserPage = () => {
-    // const { userId } = useParams();
     const { currentUser } = useAuth();
-    // console.log(currentUser);
     const { professions } = useProfessions();
     const { qualities } = useQualities();
     // const history = useHistory();
     const [isLoading, setIsLoading] = useState(false);
-    const [data, setData] = useState({
-        name: "",
-        email: "",
-        profession: "",
-        sex: "male",
-        qualities: []
-    });
+    const [data, setData] = useState({});
 
     const [professionss, setProfession] = useState([]);
     const [qualitiess, setQualities] = useState([]);
-
     const [errors, setErrors] = useState({});
 
     const getProfessionById = (id) => {
         const profById = professions.filter((prof) => prof._id === id);
         return profById;
     };
-    const profUser = getProfessionById(currentUser.profession);
-    console.log(profUser);
 
     useEffect(() => {
         const qualitiesList = qualities.map((optionName) => ({
@@ -75,14 +63,22 @@ const EditUserPage = () => {
         //         }
         //     }
         // }
-        console.log(qualitiesArray);
         return qualitiesArray;
     };
 
-    getQualities(currentUser.qualities);
+    useEffect(() => {
+        setData({
+            name: currentUser.name || "",
+            email: currentUser.email || "",
+            profession: getProfessionById(currentUser.profession) || [],
+            sex: currentUser.sex || "male",
+            qualities: getQualities(currentUser.qualities) || []
+        });
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
         // const isValid = validate();
         // if (!isValid) return;
         // const { profession, qualities } = data;
@@ -93,11 +89,10 @@ const EditUserPage = () => {
         //         qualities: getQualities(qualities)
         //     })
         //     .then((data) => history.push(`/users/${data._id}`));
-        // console.log({
-        //     ...data,
-        //     profession: getProfessionById(profession),
-        //     qualities: getQualities(qualities)
-        // });
+        console.log({
+            ...data,
+            profession: getProfessionById(data.profession)
+        });
     };
     // const transformData = (data) => {
     //     return data.map((qual) => ({ label: qual.name, value: qual._id }));
@@ -174,14 +169,14 @@ const EditUserPage = () => {
                             <TextField
                                 label="Имя"
                                 name="name"
-                                value={currentUser.name}
+                                value={data.name}
                                 onChange={handleChange}
                                 error={errors.name}
                             />
                             <TextField
                                 label="Электронная почта"
                                 name="email"
-                                value={currentUser.email}
+                                value={data.email}
                                 onChange={handleChange}
                                 error={errors.email}
                             />
@@ -206,7 +201,7 @@ const EditUserPage = () => {
                                 label="Выберите ваш пол"
                             />
                             <MultiSelectField
-                                defaultValue={""}
+                                defaultValue={data.qualities}
                                 options={qualitiess}
                                 onChange={handleChange}
                                 name="qualities"
