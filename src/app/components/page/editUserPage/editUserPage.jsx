@@ -10,7 +10,7 @@ import { useProfessions } from "../../../hooks/useProfession";
 import { useQualities } from "../../../hooks/useQualities";
 
 const EditUserPage = () => {
-    const { currentUser } = useAuth();
+    const { currentUser, changeUserData } = useAuth();
     const { professions } = useProfessions();
     const { qualities } = useQualities();
     // const history = useHistory();
@@ -39,30 +39,18 @@ const EditUserPage = () => {
             value: professionName._id
         }));
         setProfession(professionsList);
-    }, [qualities, professions]);
+    }, []);
 
     const getQualities = (elements) => {
         const qualitiesArray = [];
         elements.forEach((quaId) => {
             qualities.forEach((qual) => {
-                console.log(qual);
                 if (qual._id === quaId) {
                     qualitiesArray.push(qual);
                 }
             });
         });
-        // for (const elem of elements) {
-        //     console.log(elem);
-        //     for (const quality in qualities) {
-        //         if (elem.value === qualities[quality].value) {
-        //             qualitiesArray.push({
-        //                 _id: qualities[quality].value,
-        //                 name: qualities[quality].label,
-        //                 color: qualities[quality].color
-        //             });
-        //         }
-        //     }
-        // }
+
         return qualitiesArray;
     };
 
@@ -70,11 +58,15 @@ const EditUserPage = () => {
         setData({
             name: currentUser.name || "",
             email: currentUser.email || "",
-            profession: getProfessionById(currentUser.profession) || [],
+            profession: getProfessionById(currentUser.profession) || "",
             sex: currentUser.sex || "male",
-            qualities: getQualities(currentUser.qualities) || []
+            qualities: getQualities(currentUser.qualities) || ""
         });
     }, []);
+
+    // const transformData = (data) => {
+    //     return data.map((qual) => ({ label: qual.name, value: qual._id }));
+    // };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -89,14 +81,16 @@ const EditUserPage = () => {
         //         qualities: getQualities(qualities)
         //     })
         //     .then((data) => history.push(`/users/${data._id}`));
-        console.log({
+        // console.log({
+        //     ...data,
+        //     profession: getProfessionById(data.profession)
+        // });
+        changeUserData({
             ...data,
-            profession: getProfessionById(data.profession)
+            profession: getProfessionById(data.profession),
+            qualities: getQualities(data.qualities)
         });
     };
-    // const transformData = (data) => {
-    //     return data.map((qual) => ({ label: qual.name, value: qual._id }));
-    // };
 
     // useEffect(() => {
     //     setIsLoading(true);
