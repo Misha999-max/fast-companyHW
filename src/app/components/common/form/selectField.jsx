@@ -20,7 +20,7 @@ const SelectField = ({
     const optionsArray =
         !Array.isArray(options) && typeof options === "object"
             ? Object.values(options)
-            : options;
+            : options.map((op) => ({ label: op.name, value: op._id }));
 
     return (
         <div className="mb-4">
